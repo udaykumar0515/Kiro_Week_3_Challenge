@@ -33,12 +33,18 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for premium design
+# Custom CSS for improved readability and design
 st.markdown("""
 <style>
-    /* Main background gradient */
+    /* Main background gradient - softer for better readability */
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    }
+    
+    /* Improved text contrast */
+    p, div, span, label {
+        color: white !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
     
     /* Card styling */
@@ -49,41 +55,61 @@ st.markdown("""
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     
-    /* Metric styling */
+    /* Metric styling - better visibility */
     [data-testid="stMetricValue"] {
-        font-size: 2rem;
-        font-weight: 700;
-        background: linear-gradient(120deg, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-size: 2.2rem !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     
-    /* Headers */
+    [data-testid="stMetricLabel"] {
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Headers - improved contrast */
     h1, h2, h3 {
-        color: white;
-        font-weight: 700;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
     }
     
-    /* Sidebar */
+    /* Sidebar - better contrast */
     [data-testid="stSidebar"] {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.15) !important;
         backdrop-filter: blur(10px);
+    }
+    
+    [data-testid="stSidebar"] label {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        font-size: 1.05rem !important;
     }
     
     /* Buttons */
     .stButton>button {
-        background: linear-gradient(120deg, #667eea, #764ba2);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 10px 24px;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        background: linear-gradient(120deg, #667eea, #764ba2) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 12px 24px !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+        transition: all 0.3s ease !important;
     }
     
     .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6) !important;
+    }
+    
+    /* Info boxes */
+    .stAlert {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        border-radius: 10px !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -300,7 +326,7 @@ if fetch_button or 'data_loaded' in st.session_state:
                 x=merged_df.index,
                 y=merged_df[weather_column],
                 name=selected_metric,
-                line=dict(color='#667eea', width=3),
+                line=dict(color='#00D9FF', width=4),  # Bright cyan
                 yaxis='y1',
                 hovertemplate='%{x|%Y-%m-%d}<br>' + selected_metric + ': %{y:.2f}<extra></extra>'
             ))
@@ -310,38 +336,44 @@ if fetch_button or 'data_loaded' in st.session_state:
                 x=merged_df.index,
                 y=merged_df[trends_col],
                 name=f'Search Interest: {selected_keyword}',
-                line=dict(color='#764ba2', width=3, dash='dash'),
+                line=dict(color='#FFD700', width=4, dash='solid'),  # Bright gold/yellow
                 yaxis='y2',
                 hovertemplate='%{x|%Y-%m-%d}<br>Search Interest: %{y}<extra></extra>'
             ))
             
             fig_timeseries.update_layout(
-                title=f"{selected_metric} vs Search Interest for '{selected_keyword}'",
-                xaxis=dict(title="Date", gridcolor='rgba(255,255,255,0.2)'),
+                title=dict(
+                    text=f"{selected_metric} vs Search Interest for '{selected_keyword}'",
+                    font=dict(size=18, color='white')
+                ),
+                xaxis=dict(
+                    title=dict(text="Date", font=dict(color='white', size=14)),
+                    gridcolor='rgba(255,255,255,0.2)',
+                    tickfont=dict(color='white', size=12)
+                ),
                 yaxis=dict(
-                    title=selected_metric,
-                    titlefont=dict(color='#667eea'),
-                    tickfont=dict(color='#667eea'),
-                    gridcolor='rgba(255,255,255,0.2)'
+                    title=dict(text=selected_metric, font=dict(color='#00D9FF', size=14)),  # Bright cyan
+                    gridcolor='rgba(255,255,255,0.2)',
+                    tickfont=dict(color='white', size=12)
                 ),
                 yaxis2=dict(
-                    title=f"Search Interest: {selected_keyword}",
-                    titlefont=dict(color='#764ba2'),
-                    tickfont=dict(color='#764ba2'),
+                    title=dict(text=f"Search Interest: {selected_keyword}", font=dict(color='#FFD700', size=14)),  # Bright yellow
                     overlaying='y',
-                    side='right'
+                    side='right',
+                    tickfont=dict(color='white', size=12)
                 ),
                 hovermode='x unified',
                 plot_bgcolor='rgba(0,0,0,0)',
                 paper_bgcolor='rgba(0,0,0,0)',
-                font=dict(color='white'),
+                font=dict(color='white', size=12),
                 height=500,
                 legend=dict(
                     orientation="h",
                     yanchor="bottom",
                     y=1.02,
                     xanchor="right",
-                    x=1
+                    x=1,
+                    font=dict(color='white', size=12)
                 )
             )
             
@@ -380,19 +412,31 @@ if fetch_button or 'data_loaded' in st.session_state:
             ))
             
             fig_scatter.update_layout(
-                title=f"Correlation: {selected_metric} vs Search for '{selected_keyword}'",
-                xaxis=dict(title=selected_metric, gridcolor='rgba(255,255,255,0.2)'),
-                yaxis=dict(title=f"Search Interest: {selected_keyword}", gridcolor='rgba(255,255,255,0.2)'),
+                title=dict(
+                    text=f"Correlation: {selected_metric} vs Search for '{selected_keyword}'",
+                    font=dict(size=18, color='white')
+                ),
+                xaxis=dict(
+                    title=dict(text=selected_metric, font=dict(color='white', size=14)),
+                    gridcolor='rgba(255,255,255,0.2)',
+                    tickfont=dict(color='white', size=12)
+                ),
+                yaxis=dict(
+                    title=dict(text=f"Search Interest: {selected_keyword}", font=dict(color='white', size=14)),
+                    gridcolor='rgba(255,255,255,0.2)',
+                    tickfont=dict(color='white', size=12)
+                ),
                 plot_bgcolor='rgba(0,0,0,0)',
                 paper_bgcolor='rgba(0,0,0,0)',
-                font=dict(color='white'),
+                font=dict(color='white', size=12),
                 height=500,
                 legend=dict(
                     orientation="h",
                     yanchor="bottom",
                     y=1.02,
                     xanchor="right",
-                    x=1
+                    x=1,
+                    font=dict(color='white', size=12)
                 )
             )
             
