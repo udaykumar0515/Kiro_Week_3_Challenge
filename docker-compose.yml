@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  dashboard:
+    build: .
+    container_name: data-weaver-dashboard
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data/cache:/app/data/cache
+    environment:
+      - CACHE_DIR=data/cache
+      - DEFAULT_LOCATION=London
+      - DEFAULT_KEYWORD=umbrella
+      - CACHE_EXPIRY_HOURS=24
+      - TRENDS_CACHE_DAYS=7
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
