@@ -80,6 +80,8 @@ streamlit run app/dashboard.py
 
 Navigate to `http://localhost:8501`
 
+**Note:** If Google Trends rate-limits your requests, the dashboard will automatically fall back to sample CSV data in `data/sample/`. This ensures the dashboard always works even without live API access.
+
 ### Docker Deployment
 
 **Quick start with Docker Compose:**
