@@ -16,6 +16,7 @@ class TrendsFetcher:
     """Fetch Google Trends data with caching and rate limiting."""
     
     CACHE_DIR = Path("data/cache")
+    SAMPLE_DIR = Path("data/sample")
     
     def __init__(self, cache_expiry_days: int = 7):
         """
@@ -125,7 +126,20 @@ class TrendsFetcher:
             
         except Exception as e:
             print(f"✗ Error fetching trends data: {e}")
-            print(f"  Note: Google Trends may rate-limit. Try again in a few minutes.")
+            print(f"  Note: Google Trends may rate-limit. Trying sample data fallback...")
+            
+            # Try to load from sample directory as fallback
+            sample_path = self.SAMPLE_DIR / f"trends_{keyword}_{geo or 'worldwide'}_{start_date}_{end_date}.csv"
+            if sample_path.exists():
+                try:
+                    df = pd.read_csv(sample_path, index_col=0, parse_dates=True)
+                    print(f"✓ Loaded sample data from: {sample_path.name}")
+                    return df
+                except Exception as fallback_error:
+                    print(f"⚠ Failed to load sample data: {fallback_error}")
+            else:
+                print(f"⚠ No sample data found at: {sample_path}")
+            
             return None
     
     def clear_cache(self):
