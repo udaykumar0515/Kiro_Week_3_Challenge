@@ -52,15 +52,15 @@ git clone https://github.com/udaykumar0515/Kiro_Week_3_Challenge.git
 cd Kiro_Week_3_Challenge
 ```
 
-2. **Create and activate virtual environment:**
+2. **Create and activate virtual environment (Python 3.10 recommended):**
 
 ```bash
-# Windows
-python -m venv venv
+# Windows (recommended - Python 3.10)
+py -3.10 -m venv venv
 venv\Scripts\activate
 
-# Linux/Mac
-python3 -m venv venv
+# Linux/Mac (Python 3.10)
+python3.10 -m venv venv
 source venv/bin/activate
 ```
 
